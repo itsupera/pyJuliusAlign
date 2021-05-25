@@ -25,6 +25,10 @@ import xml.etree.cElementTree as etree
 
 from pyjuliusalign import convertKana
 
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
+
 
 class UnidentifiedJapaneseText(Exception):
 
@@ -154,12 +158,9 @@ def cabocha(sentence, cabochaEncoding, cabochaPath=None):
 
     return retStr
 
-
 def jReads(target_sent, cabochaEncoding, cabochaPath):
 
     xmlStr = cabocha(target_sent, cabochaEncoding, cabochaPath).encode('utf-8')
-#     print(target_sent)
-#     print(xmlStr)
     try:
         sentence = etree.fromstring(xmlStr)
     except etree.ParseError:
@@ -181,7 +182,7 @@ def jReads(target_sent, cabochaEncoding, cabochaPath):
             # Contains syntactic and morphological information
             featureStr = tok.get("feature")
             featureList = featureStr.split(',')
-            if featureList[0] == u"記号":
+            if u"記号" in featureList[0]:
                 continue
 
             # Don't process empty words (can happen a lot,
@@ -190,7 +191,8 @@ def jReads(target_sent, cabochaEncoding, cabochaPath):
             if word == "":
                 continue
 
-            kana = featureList[-1]
+            # kana = featureList[9]  # working with unidic-lite
+            kana = featureList[6]  # working with unidic
 
             if kana != '*':
                 jReadsToks.append(kana)

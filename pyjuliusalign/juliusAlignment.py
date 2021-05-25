@@ -322,6 +322,9 @@ def formatTextForJulius(line, cabochaEncoding, cabochaPath):
 
     line = line.strip()
 
+    tmpWordList = []
+    tmpKanaList = []
+    tmpRomajiList = []
     try:
         (tmpWordList, tmpKanaList,
          tmpRomajiList) = jProcessingSnippet.getChunkedKana(line,
